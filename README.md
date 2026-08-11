@@ -79,14 +79,21 @@ curl http://localhost:3000/eleves
 
 ```
 src/
-├── app.ts                     # Configuration Express (routes + middlewares)
-├── server.ts                  # Point d'entrée (démarrage du serveur)
+├── app.ts                      # Configuration Express (routes + middlewares)
+├── server.ts                   # Point d'entrée (démarrage du serveur)
 ├── config/
-│   └── database.ts            # Pool de connexion PostgreSQL
+│   └── database.ts             # Pool de connexion PostgreSQL
+├── models/
+│   └── eleve.model.ts          # Interface Eleve
+├── repositories/
+│   └── eleve.repository.ts     # Accès aux données (requêtes SQL)
+├── services/
+│   └── eleve.service.ts        # Logique métier
 ├── controllers/
-│   └── eleve.controller.ts    # Logique métier des routes
+│   └── eleve.controller.ts     # Gestion des requêtes/réponses
 ├── routes/
-│   └── eleve.routes.ts        # Définition des routes /eleves
+│   └── eleve.routes.ts         # Définition des routes /eleves
 └── middleware/
-    └── error.middleware.ts    # Gestion centralisée des erreurs
+    └── error.middleware.ts     # Gestion centralisée des erreurs
+
 ```
