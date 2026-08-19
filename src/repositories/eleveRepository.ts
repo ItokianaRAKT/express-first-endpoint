@@ -1,5 +1,5 @@
 import { pool } from "../config/database.js";
-import type { Eleve } from "../models/eleve.model.js";
+import type { Eleve } from "../models/eleveModel.js";
 
 export async function findAll(): Promise<Eleve[]> {
   const result = await pool.query(

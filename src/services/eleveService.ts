@@ -1,5 +1,5 @@
-import * as eleveRepository from "../repositories/eleve.repository.js";
-import type { Eleve } from "../models/eleve.model.js";
+import * as eleveRepository from "../repositories/eleveRepository.js";
+import type { Eleve } from "../models/eleveModel.js";
 
 export async function getAll(): Promise<Eleve[]> {
   return eleveRepository.findAll();
