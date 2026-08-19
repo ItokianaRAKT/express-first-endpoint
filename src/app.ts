@@ -1,7 +1,7 @@
 import express from 'express';
-import { eleveRouter } from './routes/eleve.routes.js';
-import { authRouter } from './routes/auth.routes.js';
-import { errorHandler } from './middleware/error.middleware.js';
+import { eleveRouter } from './routes/eleveRoutes.js';
+import { authRouter } from './routes/authRoutes.js';
+import { errorHandler } from './middleware/errorMiddleware.js';
 
 const app = express();
 

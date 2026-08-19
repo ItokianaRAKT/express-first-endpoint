@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
-import * as eleveService from "../services/eleve.service.js";
+import * as eleveService from "../services/eleveService.js";
 
 export async function getEleves(
   req: Request,
