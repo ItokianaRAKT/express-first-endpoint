@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
-import { pool } from "../config/database.js";
+import * as eleveService from "../services/eleve.service.js";
 
 export async function getEleves(
   req: Request,
@@ -7,14 +7,12 @@ export async function getEleves(
   next: NextFunction
 ) {
   try {
-  const result = await pool.query(
-    'SELECT * FROM eleves ORDER BY id'
-  );
-    res.json(result.rows);
+    const eleves = await eleveService.getAll();
+    res.json(eleves);
+  } catch (error) {
+    next(error);
+  }
 }
-catch (error) {
-  next(error);
-}}
 
 export async function getEleveById(
   req: Request,
@@ -22,17 +20,21 @@ export async function getEleveById(
   next: NextFunction
 ) {
   try {
-    const { id } = req.params;
-    const result = await pool.query(
-      'SELECT * FROM eleves WHERE id = $1',
-      [id]
-    );
-    if (result.rows.length === 0) {
+    const id = Number(req.params.id);
+
+    if (Number.isNaN(id)) {
+      return res.status(400).json({
+        error: "L'identifiant doit être un nombre"
+      });
+    }
+    const eleve = await eleveService.getById(id);
+
+    if (!eleve) {
       return res.status(404).json({
         error: "Elève introuvable"
       });
     }
-    res.json(result.rows[0]);
+    res.json(eleve);
   } catch (error) {
     next(error);
   }
@@ -44,12 +46,16 @@ export async function createEleve(
   next: NextFunction
 ) {
   try {
-    const { nom, prenom } = req.body;
-    const result = await pool.query(
-      'INSERT INTO eleves (nom, prenom) VALUES ($1, $2) RETURNING *',
-      [nom, prenom]
-    );
-    res.status(201).json(result.rows[0]);
+    const { nom, prenom, email, mot_de_passe } = req.body;
+
+    if (!nom || !prenom || !email || !mot_de_passe) {
+      return res.status(400).json({
+        error: "Les champs 'nom', 'prenom', 'email' et 'mot_de_passe' sont obligatoires"
+      });
+    }
+
+    const eleve = await eleveService.create({ nom, prenom, email, mot_de_passe });
+    res.status(201).json(eleve);
   } catch (error) {
     next(error);
   }
@@ -64,22 +70,27 @@ export async function updateEleve(
     const id = Number(req.params.id);
     if (Number.isNaN(id)) {
       return res.status(400).json({
-        error: "L'identifian doit être un nombre"
+        error: "L'identifiant doit être un nombre"
       });
     }
-    const { nom, prenom } = req.body;
-    const result = await pool.query(
-      'UPDATE eleves SET nom = $1, prenom = $2 WHERE id = $3 RETURNING *', [nom, prenom, id]
-    );
-    if (result.rows.length === 0) {
+    const { nom, prenom, email, mot_de_passe } = req.body;
+
+    if (!nom || !prenom || !email || !mot_de_passe) {
+      return res.status(400).json({
+        error: "Les champs 'nom', 'prenom', 'email' et 'mot_de_passe' sont obligatoires"
+      });
+    }
+
+    const eleve = await eleveService.update(id, { nom, prenom, email, mot_de_passe });
+    if (!eleve) {
       return res.status(404).json({
         error: "Élève introuvable"
-      })
+      });
     }
-    res.json(result.rows[0])
+    res.json(eleve);
   } catch (error) {
-      next(error)
-    }
+    next(error);
+  }
 }
 
 export async function updateElevePartially(
@@ -94,23 +105,21 @@ export async function updateElevePartially(
         error: "L'identifiant doit être un nombre"
       });
     }
-    const { nom, prenom } = req.body;
-    if (nom === undefined && prenom === undefined) {
+    const { nom, prenom, email, mot_de_passe } = req.body;
+    if (nom === undefined && prenom === undefined && email === undefined && mot_de_passe === undefined) {
       return res.status(400).json({
         error: "Au moins un champ doit être fourni"
-      })
+      });
     }
-    const result = await pool.query(
-      'UPDATE eleves SET nom = COALESCE($1, nom), prenom = COALESCE($2, prenom) WHERE id = $3 RETURNING *', [nom, prenom, id]
-    );
-    if (result.rows.length === 0) {
+    const eleve = await eleveService.updatePartial(id, { nom, prenom, email, mot_de_passe });
+    if (!eleve) {
       return res.status(404).json({
         error: "Élève introuvable"
-      })
+      });
     }
-    res.json(result.rows[0])
+    res.json(eleve);
   } catch (error) {
-    next(error)
+    next(error);
   }
 }
 
@@ -125,20 +134,17 @@ export async function deleteEleve(
     if (Number.isNaN(id)) {
       return res.status(400).json({
         error: "L'identifiant doit être un nombre"
-      })
+      });
     }
 
-    const result = await pool.query(
-      'DELETE FROM eleves WHERE id = $1 RETURNING *', [id]
-    )
-    if (result.rows.length === 0) {
+    const deleted = await eleveService.remove(id);
+    if (!deleted) {
       return res.status(404).json({
         error: "Élève introuvable"
-      })
+      });
     }
     res.status(204).send();
-
   } catch (error) {
-    next(error)
+    next(error);
   }
 }
