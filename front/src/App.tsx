@@ -29,7 +29,9 @@ export default function App() {
   async function handleSubmit() {
     try {
       if (editingId !== null) {
-        await updateEleve(editingId, form);
+        const payload: Record<string, string> = { nom: form.nom, prenom: form.prenom, email: form.email };
+        if (form.mot_de_passe) payload.mot_de_passe = form.mot_de_passe;
+        await updateEleve(editingId, payload);
       } else {
         await createEleve(form);
       }
@@ -120,7 +122,6 @@ export default function App() {
               border: 'none',
               borderRadius: '4px',
               cursor: 'pointer',
-              gridColumn: 'span 2',
             }}
           >
             {editingId !== null ? 'Modifier' : 'Ajouter'}

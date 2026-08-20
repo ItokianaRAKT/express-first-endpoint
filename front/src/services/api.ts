@@ -42,9 +42,9 @@ export async function createEleve(data: CreateEleveDTO): Promise<Eleve> {
   return handleResponse<Eleve>(res);
 }
 
-export async function updateEleve(id: number, data: CreateEleveDTO): Promise<Eleve> {
+export async function updateEleve(id: number, data: Partial<CreateEleveDTO>): Promise<Eleve> {
   const res = await fetch(`${API_BASE}/eleves/${id}`, {
-    method: 'PUT',
+    method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
   });
