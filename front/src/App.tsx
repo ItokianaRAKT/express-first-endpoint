@@ -1,20 +1,30 @@
 import { useState } from 'react';
-import UserTable from './UserTable';
-
-const initialUsers = [
-  { id: 1, nom: 'Dupont', prenom: 'Jean', email: 'jean@exemple.com' },
-  { id: 2, nom: 'Martin', prenom: 'Marie', email: 'marie@exemple.com' },
-  { id: 3, nom: 'Durand', prenom: 'Pierre', email: 'pierre@exemple.com' },
-];
+import UserTable, { type User } from './UserTable';
 
 export default function App() {
-  const [users, setUsers] = useState(initialUsers);
+  const [users, setUsers] = useState<User[]>([]);
   const [form, setForm] = useState({ nom: '', prenom: '', email: '' });
+  const [editingId, setEditingId] = useState<number | null>(null);
 
-  const handleAdd = () => {
-    const newUser = { id: Date.now(), ...form };
-    setUsers([...users, newUser]);
+  const handleSubmit = () => {
+    if (editingId !== null) {
+      setUsers(users.map((u) => (u.id === editingId ? { ...u, ...form } : u)));
+    } else {
+      const newUser = { id: Date.now(), ...form };
+      setUsers([...users, newUser]);
+    }
     setForm({ nom: '', prenom: '', email: '' });
+    setEditingId(null);
+  };
+
+  const handleEdit = (user: User) => {
+    setForm({ nom: user.nom, prenom: user.prenom, email: user.email });
+    setEditingId(user.id);
+  };
+
+  const handleCancel = () => {
+    setForm({ nom: '', prenom: '', email: '' });
+    setEditingId(null);
   };
 
   const handleDelete = (id: number) => {
@@ -26,8 +36,8 @@ export default function App() {
       <h2 style={{ marginBottom: '20px' }}>Gestion des Utilisateurs</h2>
 
       <div style={{ marginBottom: '20px', padding: '15px', background: '#f5f5f5', borderRadius: '8px' }}>
-        <h3 style={{ margin: '0 0 10px 0', fontSize: '16px' }}>Ajouter un utilisateur</h3>
-        <div style={{ display: 'grid', gap: '10px', gridTemplateColumns: '150px 1fr' }}>
+        <h3 style={{ margin: '0 0 10px 0', fontSize: '16px' }}>{editingId !== null ? 'Modifier un utilisateur' : 'Ajouter un utilisateur'}</h3>
+        <div style={{ display: 'grid', gap: '10px', gridTemplateColumns: '1fr 1fr 1fr' }}>
           <input
             value={form.nom}
             onChange={(e) => setForm({ ...form, nom: e.target.value })}
@@ -47,7 +57,20 @@ export default function App() {
             style={{ padding: '8px', border: '1px solid #ddd', borderRadius: '4px' }}
           />
           <button
-            onClick={handleAdd}
+            onClick={handleCancel}
+            style={{
+              padding: '8px 16px',
+              background: '#9ca3af',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+            }}
+          >
+            Annuler
+          </button>
+          <button
+            onClick={handleSubmit}
             style={{
               padding: '8px 16px',
               background: '#4f46e5',
@@ -55,14 +78,15 @@ export default function App() {
               border: 'none',
               borderRadius: '4px',
               cursor: 'pointer',
+              gridColumn: 'span 2',
             }}
           >
-            Ajouter
+            {editingId !== null ? 'Modifier' : 'Ajouter'}
           </button>
         </div>
       </div>
 
-      <UserTable users={users} onDelete={handleDelete} />
+      <UserTable users={users} onDelete={handleDelete} onEdit={handleEdit} />
     </div>
   );
 }
