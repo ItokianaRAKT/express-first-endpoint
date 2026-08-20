@@ -10,11 +10,6 @@ interface UserTableProps {
   onDelete: (id: number) => void;
 }
 
-const mockUsers: User[] = [
-  { id: 1, nom: 'Dupont', prenom: 'Jean', email: 'jean@exemple.com' },
-  { id: 2, nom: 'Martin', prenom: 'Marie', email: 'marie@exemple.com' },
-  { id: 3, nom: 'Durand', prenom: 'Pierre', email: 'pierre@exemple.com' },
-];
 
 export default function UserTableTable({
   users,
@@ -60,4 +55,4 @@ export default function UserTableTable({
   );
 }
 
-export { UserTableTable as UserTable, type UserTableProps, type User, mockUsers };
+export { UserTableTable as UserTable, type UserTableProps, type User };

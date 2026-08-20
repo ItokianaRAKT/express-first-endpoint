@@ -1,14 +1,8 @@
 import { useState } from 'react';
-import UserTable from './UserTable';
-
-const initialUsers = [
-  { id: 1, nom: 'Dupont', prenom: 'Jean', email: 'jean@exemple.com' },
-  { id: 2, nom: 'Martin', prenom: 'Marie', email: 'marie@exemple.com' },
-  { id: 3, nom: 'Durand', prenom: 'Pierre', email: 'pierre@exemple.com' },
-];
+import UserTable, { type User } from './UserTable';
 
 export default function App() {
-  const [users, setUsers] = useState(initialUsers);
+  const [users, setUsers] = useState<User[]>([]);
   const [form, setForm] = useState({ nom: '', prenom: '', email: '' });
 
   const handleAdd = () => {
