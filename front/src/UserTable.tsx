@@ -1,22 +1,12 @@
-interface User {
-  id: number;
-  nom: string;
-  prenom: string;
-  email: string;
-}
+import { type Eleve } from './services/api';
 
 interface UserTableProps {
-  users: User[];
+  users: Eleve[];
   onDelete: (id: number) => void;
-  onEdit: (user: User) => void;
+  onEdit: (eleve: Eleve) => void;
 }
 
-
-export default function UserTableTable({
-  users,
-  onDelete,
-  onEdit,
-}: UserTableProps) {
+export default function UserTable({ users, onDelete, onEdit }: UserTableProps) {
   return (
     <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '20px', tableLayout: 'fixed' }}>
       <thead>
@@ -69,5 +59,3 @@ export default function UserTableTable({
     </table>
   );
 }
-
-export { UserTableTable as UserTable, type UserTableProps, type User };
