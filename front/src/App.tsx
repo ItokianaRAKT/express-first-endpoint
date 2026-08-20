@@ -21,7 +21,7 @@ export default function App() {
 
       <div style={{ marginBottom: '20px', padding: '15px', background: '#f5f5f5', borderRadius: '8px' }}>
         <h3 style={{ margin: '0 0 10px 0', fontSize: '16px' }}>Ajouter un utilisateur</h3>
-        <div style={{ display: 'grid', gap: '10px', gridTemplateColumns: '150px 1fr' }}>
+        <div style={{ display: 'grid', gap: '10px', gridTemplateColumns: '1fr 1fr 1fr' }}>
           <input
             value={form.nom}
             onChange={(e) => setForm({ ...form, nom: e.target.value })}
@@ -41,6 +41,19 @@ export default function App() {
             style={{ padding: '8px', border: '1px solid #ddd', borderRadius: '4px' }}
           />
           <button
+            onClick={() => setForm({ nom: '', prenom: '', email: '' })}
+            style={{
+              padding: '8px 16px',
+              background: '#9ca3af',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+            }}
+          >
+            Annuler
+          </button>
+          <button
             onClick={handleAdd}
             style={{
               padding: '8px 16px',
@@ -49,6 +62,7 @@ export default function App() {
               border: 'none',
               borderRadius: '4px',
               cursor: 'pointer',
+              gridColumn: 'span 2',
             }}
           >
             Ajouter
