@@ -8,12 +8,14 @@ interface User {
 interface UserTableProps {
   users: User[];
   onDelete: (id: number) => void;
+  onEdit: (user: User) => void;
 }
 
 
 export default function UserTableTable({
   users,
   onDelete,
+  onEdit,
 }: UserTableProps) {
   return (
     <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '20px', tableLayout: 'fixed' }}>
@@ -23,7 +25,7 @@ export default function UserTableTable({
           <th style={{ padding: '8px', textAlign: 'left', width: '20%' }}>Nom</th>
           <th style={{ padding: '8px', textAlign: 'left', width: '20%' }}>Prénom</th>
           <th style={{ padding: '8px', textAlign: 'left', width: '25%' }}>Email</th>
-          <th style={{ padding: '8px', textAlign: 'left', width: '120px' }}>Actions</th>
+          <th style={{ padding: '8px', textAlign: 'left', width: '180px' }}>Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -33,7 +35,20 @@ export default function UserTableTable({
             <td style={{ padding: '8px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user.nom}</td>
             <td style={{ padding: '8px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user.prenom}</td>
             <td style={{ padding: '8px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user.email}</td>
-            <td style={{ padding: '8px' }}>
+            <td style={{ padding: '8px', display: 'flex', gap: '4px' }}>
+              <button
+                onClick={() => onEdit(user)}
+                style={{
+                  padding: '4px 8px',
+                  background: '#f59e0b',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                }}
+              >
+                Modifier
+              </button>
               <button
                 onClick={() => onDelete(user.id)}
                 style={{
