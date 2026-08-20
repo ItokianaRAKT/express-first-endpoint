@@ -1,25 +1,12 @@
-interface User {
-  id: number;
-  nom: string;
-  prenom: string;
-  email: string;
-}
+import { type Eleve } from './services/api';
 
 interface UserTableProps {
-  users: User[];
+  users: Eleve[];
   onDelete: (id: number) => void;
+  onEdit: (eleve: Eleve) => void;
 }
 
-const mockUsers: User[] = [
-  { id: 1, nom: 'Dupont', prenom: 'Jean', email: 'jean@exemple.com' },
-  { id: 2, nom: 'Martin', prenom: 'Marie', email: 'marie@exemple.com' },
-  { id: 3, nom: 'Durand', prenom: 'Pierre', email: 'pierre@exemple.com' },
-];
-
-export default function UserTableTable({
-  users,
-  onDelete,
-}: UserTableProps) {
+export default function UserTable({ users, onDelete, onEdit }: UserTableProps) {
   return (
     <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '20px' }}>
       <thead>
@@ -38,7 +25,20 @@ export default function UserTableTable({
             <td style={{ padding: '8px' }}>{user.nom}</td>
             <td style={{ padding: '8px' }}>{user.prenom}</td>
             <td style={{ padding: '8px' }}>{user.email}</td>
-            <td style={{ padding: '8px' }}>
+            <td style={{ padding: '8px', display: 'flex', gap: '8px' }}>
+              <button
+                onClick={() => onEdit(user)}
+                style={{
+                  padding: '4px 8px',
+                  background: '#f59e0b',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                }}
+              >
+                Modifier
+              </button>
               <button
                 onClick={() => onDelete(user.id)}
                 style={{
@@ -59,5 +59,3 @@ export default function UserTableTable({
     </table>
   );
 }
-
-export { UserTableTable as UserTable, type UserTableProps, type User, mockUsers };
