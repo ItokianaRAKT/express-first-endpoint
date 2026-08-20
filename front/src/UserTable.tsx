@@ -19,10 +19,10 @@ export default function UserTableTable({
     <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '20px', tableLayout: 'fixed' }}>
       <thead>
         <tr style={{ background: '#f0f0f0', padding: '10px' }}>
-          <th style={{ padding: '8px', textAlign: 'left', width: '60px' }}>ID</th>
+          <th style={{ padding: '8px', textAlign: 'left', width: '100px' }}>ID</th>
           <th style={{ padding: '8px', textAlign: 'left', width: '20%' }}>Nom</th>
           <th style={{ padding: '8px', textAlign: 'left', width: '20%' }}>Prénom</th>
-          <th style={{ padding: '8px', textAlign: 'left', width: '30%' }}>Email</th>
+          <th style={{ padding: '8px', textAlign: 'left', width: '25%' }}>Email</th>
           <th style={{ padding: '8px', textAlign: 'left', width: '120px' }}>Actions</th>
         </tr>
       </thead>
