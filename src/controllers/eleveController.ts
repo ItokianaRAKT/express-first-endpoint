@@ -46,15 +46,15 @@ export async function createEleve(
   next: NextFunction
 ) {
   try {
-    const { nom, prenom, email, mot_de_passe } = req.body;
+    const { nom, prenom, email } = req.body;
 
-    if (!nom || !prenom || !email || !mot_de_passe) {
+    if (!nom || !prenom || !email) {
       return res.status(400).json({
-        error: "Les champs 'nom', 'prenom', 'email' et 'mot_de_passe' sont obligatoires"
+        error: "Les champs 'nom', 'prenom' et 'email' sont obligatoires"
       });
     }
 
-    const eleve = await eleveService.create({ nom, prenom, email, mot_de_passe });
+    const eleve = await eleveService.create({ nom, prenom, email });
     res.status(201).json(eleve);
   } catch (error) {
     next(error);
@@ -73,15 +73,15 @@ export async function updateEleve(
         error: "L'identifiant doit être un nombre"
       });
     }
-    const { nom, prenom, email, mot_de_passe } = req.body;
+    const { nom, prenom, email } = req.body;
 
-    if (!nom || !prenom || !email || !mot_de_passe) {
+    if (!nom || !prenom || !email) {
       return res.status(400).json({
-        error: "Les champs 'nom', 'prenom', 'email' et 'mot_de_passe' sont obligatoires"
+        error: "Les champs 'nom', 'prenom' et 'email' sont obligatoires"
       });
     }
 
-    const eleve = await eleveService.update(id, { nom, prenom, email, mot_de_passe });
+    const eleve = await eleveService.update(id, { nom, prenom, email });
     if (!eleve) {
       return res.status(404).json({
         error: "Élève introuvable"
@@ -105,13 +105,13 @@ export async function updateElevePartially(
         error: "L'identifiant doit être un nombre"
       });
     }
-    const { nom, prenom, email, mot_de_passe } = req.body;
-    if (nom === undefined && prenom === undefined && email === undefined && mot_de_passe === undefined) {
+    const { nom, prenom, email } = req.body;
+    if (nom === undefined && prenom === undefined && email === undefined) {
       return res.status(400).json({
         error: "Au moins un champ doit être fourni"
       });
     }
-    const eleve = await eleveService.updatePartial(id, { nom, prenom, email, mot_de_passe });
+    const eleve = await eleveService.updatePartial(id, { nom, prenom, email });
     if (!eleve) {
       return res.status(404).json({
         error: "Élève introuvable"

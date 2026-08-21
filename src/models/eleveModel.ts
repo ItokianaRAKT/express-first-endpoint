@@ -1,7 +1,6 @@
 export interface Eleve {
   id: number;
-  nom: string;
+  nom:   string;
   prenom: string;
-  email: string;
-  mot_de_passe: string;
+  email:  string;
 }
