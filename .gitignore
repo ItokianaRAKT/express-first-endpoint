@@ -1,0 +1,22 @@
+.env
+node_modules/
+dist/
+front/dist/
+
+# Compiled files outside dist/
+db/*.js
+db/*.d.ts
+db/*.js.map
+db/*.d.ts.map
+front/src/*.js
+front/src/*.d.ts
+front/src/*.js.map
+front/src/*.d.ts.map
+front/src/services/*.js
+front/src/services/*.d.ts
+front/src/services/*.js.map
+front/src/services/*.d.ts.map
+front/vite.config.js
+front/vite.config.d.ts
+front/vite.config.js.map
+front/vite.config.d.ts.map
