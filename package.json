@@ -6,9 +6,7 @@
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "build": "tsc && cd front && npm install && npm run build",
-    "start": "tsx db/migrate.ts && node dist/server.js",
-    "migrate": "tsx db/migrate.ts",
-    "postinstall": "tsx db/migrate.ts"
+    "start": "node dist/server.js"
   },
   "keywords": [],
   "author": "",
