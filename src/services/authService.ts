@@ -1,80 +1,37 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { pool } from "../config/database.js";
+import * as adminRepository from "../repositories/adminRepository.js";
 
 const JWT_SECRET: string = process.env.JWT_SECRET || "";
 const JWT_OPTIONS: jwt.SignOptions = { expiresIn: 3600 };
 
-async function findByEmail(email: string) {
-  const result = await pool.query(
-    "SELECT * FROM eleves WHERE email = $1",
-    [email]
-  );
-  return result.rows[0] || null;
-}
-
-async function createEleve(eleve: {
-  nom: string;
-  prenom: string;
-  email: string;
-  mot_de_passe: string;
-}) {
-  const result = await pool.query(
-    "INSERT INTO eleves (nom, prenom, email, mot_de_passe) VALUES ($1, $2, $3, $4) RETURNING id, nom, prenom, email",
-    [eleve.nom, eleve.prenom, eleve.email, eleve.mot_de_passe]
-  );
-  return result.rows[0];
-}
-
-export function generateToken(user: { id: number; nom: string; prenom: string }) {
+export function generateToken(admin: { id: number; nom: string; prenom: string }) {
   return jwt.sign(
-    { userId: user.id, nom: user.nom, prenom: user.prenom },
+    { adminId: admin.id, nom: admin.nom, prenom: admin.prenom },
     JWT_SECRET,
     JWT_OPTIONS
   );
 }
 
-export async function register(eleve: {
-  nom: string;
-  prenom: string;
-  email: string;
-  mot_de_passe: string;
-}) {
-  const existing = await findByEmail(eleve.email);
-  if (existing) {
-    throw new Error("Cet email est déjà utilisé");
+export async function login(nom: string, mot_de_passe: string) {
+  const admin = await adminRepository.findByNom(nom);
+  if (!admin) {
+    throw new Error("Nom ou mot de passe incorrect");
   }
 
-  const hash = await bcrypt.hash(eleve.mot_de_passe, 10);
-  const created = await createEleve({
-    ...eleve,
-    mot_de_passe: hash,
-  });
-
-  const token = generateToken(created);
-
-  return { eleve: created, token };
-}
-
-export async function login(email: string, mot_de_passe: string) {
-  const eleve = await findByEmail(email);
-  if (!eleve) {
-    throw new Error("Email ou mot de passe incorrect");
-  }
-
-  const valid = await bcrypt.compare(mot_de_passe, eleve.mot_de_passe);
+  const valid = await bcrypt.compare(mot_de_passe, admin.mot_de_passe);
   if (!valid) {
-    throw new Error("Email ou mot de passe incorrect");
+    throw new Error("Nom ou mot de passe incorrect");
   }
 
-  const token = generateToken(eleve);
+  const token = generateToken(admin);
 
   return {
-    eleve: {
-      id: eleve.id,
-      nom: eleve.nom,
-      prenom: eleve.prenom,
-      email: eleve.email,
+    admin: {
+      id: admin.id,
+      nom: admin.nom,
+      prenom: admin.prenom,
+      email: admin.email,
     },
     token,
   };
