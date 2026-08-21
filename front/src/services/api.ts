@@ -7,7 +7,7 @@ export interface Eleve {
 
 export type CreateEleveDTO = Omit<Eleve, 'id'>;
 
-const API_BASE = '';
+const API_BASE = 'https://express-first-endpoint.onrender.com';
 
 const TOKEN_KEY = 'admin_token';
 
