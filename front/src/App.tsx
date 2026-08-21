@@ -2,9 +2,13 @@ import { useState, useEffect } from 'react';
 import UserTable from './UserTable';
 import { getEleves, createEleve, updateEleve, deleteEleve, type Eleve } from './services/api';
 
-export default function App() {
+interface AppProps {
+  onLogout: () => void;
+}
+
+export default function App({ onLogout }: AppProps) {
   const [users, setUsers] = useState<Eleve[]>([]);
-  const [form, setForm] = useState({ nom: '', prenom: '', email: '', mot_de_passe: '' });
+  const [form, setForm] = useState({ nom: '', prenom: '', email: '' });
   const [editingId, setEditingId] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -33,7 +37,7 @@ export default function App() {
       } else {
         await createEleve(form);
       }
-      setForm({ nom: '', prenom: '', email: '', mot_de_passe: '' });
+      setForm({ nom: '', prenom: '', email: '' });
       setEditingId(null);
       await loadEleves();
     } catch (err) {
@@ -51,18 +55,33 @@ export default function App() {
   }
 
   function handleEdit(eleve: Eleve) {
-    setForm({ nom: eleve.nom, prenom: eleve.prenom, email: eleve.email, mot_de_passe: '' });
+    setForm({ nom: eleve.nom, prenom: eleve.prenom, email: eleve.email });
     setEditingId(eleve.id);
   }
 
   function handleCancel() {
-    setForm({ nom: '', prenom: '', email: '', mot_de_passe: '' });
+    setForm({ nom: '', prenom: '', email: '' });
     setEditingId(null);
   }
 
   return (
     <div style={{ padding: '20px', fontFamily: 'sans-serif' }}>
-      <h2 style={{ marginBottom: '20px' }}>Gestion des Élèves</h2>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+        <h2 style={{ margin: 0 }}>Gestion des Élèves</h2>
+        <button
+          onClick={onLogout}
+          style={{
+            padding: '8px 16px',
+            background: '#ef4444',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer',
+          }}
+        >
+          Déconnexion
+        </button>
+      </div>
 
       {error && (
         <div style={{ padding: '10px', background: '#fee', color: '#c00', borderRadius: '4px', marginBottom: '15px' }}>
@@ -71,7 +90,7 @@ export default function App() {
       )}
 
       <div style={{ marginBottom: '20px', padding: '15px', background: '#f5f5f5', borderRadius: '8px' }}>
-        <h3 style={{ margin: '0 0 10px 0', fontSize: '16px' }}>{editingId !== null ? 'Modifier un utilisateur' : 'Ajouter un utilisateur'}</h3>
+        <h3 style={{ margin: '0 0 10px 0', fontSize: '16px' }}>{editingId !== null ? 'Modifier un élève' : 'Ajouter un élève'}</h3>
         <div style={{ display: 'grid', gap: '10px', gridTemplateColumns: '1fr 1fr 1fr' }}>
           <input
             value={form.nom}
@@ -89,13 +108,6 @@ export default function App() {
             value={form.email}
             onChange={(e) => setForm({ ...form, email: e.target.value })}
             placeholder='Email'
-            style={{ padding: '8px', border: '1px solid #ddd', borderRadius: '4px' }}
-          />
-          <input
-            type='password'
-            value={form.mot_de_passe}
-            onChange={(e) => setForm({ ...form, mot_de_passe: e.target.value })}
-            placeholder='Mot de passe'
             style={{ padding: '8px', border: '1px solid #ddd', borderRadius: '4px' }}
           />
           <button
